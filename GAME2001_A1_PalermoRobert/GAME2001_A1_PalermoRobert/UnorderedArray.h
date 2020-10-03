@@ -1,85 +1,40 @@
 #pragma once
 #include <cassert>
+#include "Array.h"
 
 template<class T>
-class UnorderedArray
+class UnorderedArray : public Array<T>
 {
 public:
 	// Constructor
-	UnorderedArray(int size, int growBy = 1) :
-		m_array(NULL), m_maxSize(0), m_growSize(0), m_numElements(0)
-	{
-		if (size)
-		{
-			m_maxSize = size;
-			m_array = new T[m_maxSize];		// Dynamically allocating an array to m_maxSize
-			memset(m_array, 0, sizeof(T) * m_maxSize);	// Explicitly allocating memory based on the type T
-
-			m_growSize = ((growBy > 0) ? growBy : 0);
-		}
-	}
-	// Destructor
-	~UnorderedArray()
-	{
-		if (m_array != NULL)
-		{
-			delete[] m_array;
-			m_array = NULL;
-		}
-	}
+	UnorderedArray(int size, int growBy = 1) : Array<T>(size, growBy)
+	{}
 	// Insertions
 	// Fast insertion for UnorderedArray -- Big-O is O(1)
-	void push(T val)
+	virtual int push(T val)
 	{
-		assert(m_array != NULL);	// Debugging purposes
+		assert(Array<T>::m_array != NULL);	// Debugging purposes
 
-		if (m_numElements >= m_maxSize)
+		if (Array<T>::m_numElements >= Array<T>::m_maxSize)
 		{
-			Expand();
+			Array<T>::Expand();
 		}
 
 		// My array has space for the new value
-		m_array[m_numElements] = val;
-		m_numElements++;
-	}
-	// Deletion (2 ways)
-	// Remove the last item inserted into the array
-	void pop()
-	{
-		if (m_numElements > 0)
-		{
-			m_numElements--;
-		}
-	}
-	// Remove an item given an index
-	// (Almost) Brute-force execution -- Big-O = O(N)
-	void remove(int index)
-	{
-		assert(m_array != NULL);
+		Array<T>::m_array[Array<T>::m_numElements] = val;
+		Array<T>::m_numElements++;
 
-		if (index >= m_numElements)
-		{
-			return;
-		}
-
-		for (int i = index; i < m_numElements; i++)
-		{
-			if (i + 1 < m_numElements)
-			{
-				m_array[i] = m_array[i + 1];
-			}
-		}
-		m_numElements--;
+		return Array<T>::m_numElements - 1;
 	}
 	// Searching (Linear search) -- Big-O = O(N)
 	int search(T val)
 	{
-		assert(m_array != NULL);
+		assert(Array<T>::m_array != NULL);
 
 		// Brute-froce search
-		for (int i = 0; i < m_numElements; i++)
+		for (int i = 0; i < Array<T>::m_numElements; i++)
 		{
-			if (m_array[i] == val)
+			if (Array<T>::m_array[i] == val)
 			{
 				return i;
 			}
@@ -91,21 +46,21 @@ public:
 	// Bubble Sort -- Big O = O(N^2)
 	void BubbleSort()
 	{
-		assert(m_array != NULL);
+		assert(Array<T>::m_array != NULL);
 
 		T temp;
 
-		for (int k = m_numElements - 1; k > 0; k--)
+		for (int k = Array<T>::m_numElements - 1; k > 0; k--)
 		{
 			// Comparing 2 adjacent elements
 			for (int i = 0; i < k; i++)
 			{
-				if (m_array[i] > m_array[i + 1])
+				if (Array<T>::m_array[i] > Array<T>::m_array[i + 1])
 				{
 					// Swap the elements
-					temp = m_array[i];
-					m_array[i] = m_array[i + 1];
-					m_array[i + 1] = temp;
+					temp = Array<T>::m_array[i];
+					Array<T>::m_array[i] = Array<T>::m_array[i + 1];
+					Array<T>::m_array[i + 1] = temp;
 				}
 			}
 		}
@@ -113,20 +68,20 @@ public:
 	// Selection Sort -- Big O = O(N^2)
 	void SelectionSort()
 	{
-		assert(m_array != NULL);
+		assert(Array<T>::m_array != NULL);
 
 		T temp;
 		int min = 0;
 
 		// The lowest position to swap the smallest element to...
-		for (int k = 0; k < m_numElements - 1; k++)
+		for (int k = 0; k < Array<T>::m_numElements - 1; k++)
 		{
 			min = k;
 
 			// Iterate through the array to find the smallest value
-			for (int i = k + 1; i < m_numElements; i++)
+			for (int i = k + 1; i < Array<T>::m_numElements; i++)
 			{
-				if (m_array[i] < m_array[min])
+				if (Array<T>::m_array[i] < Array<T>::m_array[min])
 				{
 					// Store the index to the smallest element
 					min = i;
@@ -134,81 +89,51 @@ public:
 			}
 
 			// Swapping of the lowest element with the lowest available index
-			if (m_array[k] > m_array[min])
+			if (Array<T>::m_array[k] > Array<T>::m_array[min])
 			{
 				// Swap
-				temp = m_array[k];
-				m_array[k] = m_array[min];
-				m_array[min] = temp;
+				temp = Array<T>::m_array[k];
+				Array<T>::m_array[k] = Array<T>::m_array[min];
+				Array<T>::m_array[min] = temp;
 			}
 		}
 	}
 	// Insertion Sort -- Big O = O(N^2)
 	void InsertionSort()
 	{
-		assert(m_array != NULL);
+		assert(Array<T>::m_array != NULL);
 
 		T temp;
 		int i = 0;
 
-		for (int k = 1; k < m_numElements; k++)
+		for (int k = 1; k < Array<T>::m_numElements; k++)
 		{
-			temp = m_array[k];
+			temp = Array<T>::m_array[k];
 			i = k;
 
 			// Shifting of elements if necessary. Create a space for an element
 			// to be inserted in the correct location
-			while (i > 0 && m_array[i - 1] >= temp)
+			while (i > 0 && Array<T>::m_array[i - 1] >= temp)
 			{
 				// Push elements to the right
-				m_array[i] = m_array[i - 1];
+				Array<T>::m_array[i] = Array<T>::m_array[i - 1];
 				i--;
 			}
 
 			// Place the item in the correct location
-			m_array[i] = temp;
+			Array<T>::m_array[i] = temp;
 		}
 	}
 	// Merge Sort -- Big O = O(N logN)
 	void MergeSort()
 	{
-		assert(m_array != NULL);
+		assert(Array<T>::m_array != NULL);
 
-		T* tempArray = new T[m_numElements];
+		T* tempArray = new T[Array<T>::m_numElements];
 		assert(tempArray != NULL);
 
-		MergeSort(tempArray, 0, m_numElements - 1);
+		MergeSort(tempArray, 0, Array<T>::m_numElements - 1);
 		delete[] tempArray;
-	}
-
-	// Overload the [] operator
-	T& operator[](int index)
-	{
-		assert(m_array != NULL && index < m_numElements);
-		return m_array[index];
-	}
-	// Clear -- Big-O = O(1)
-	void clear()
-	{
-		m_numElements = 0;
-	}
-	// Gets and Sets
-	int GetSize()
-	{
-		return m_numElements;
-	}
-	int GetMaxSize()
-	{
-		return m_maxSize;
-	}
-	int GetGrowSize(int val)
-	{
-		return m_growSize;
-	}
-	void SetGrowSize(int val)
-	{
-		assert(val >= 0);
-		m_growSize = val;
 	}
 private:
 	// Recursive Merge Sort
@@ -238,62 +163,30 @@ private:
 		while (low <= tempMid && mid <= upper)
 		{
 			// Lower of the 2 values is smaller, move it to the tempArray
-			if (m_array[low] < m_array[mid])
+			if (Array<T>::m_array[low] < Array<T>::m_array[mid])
 			{
-				tempArray[index++] = m_array[low++];
+				tempArray[index++] = Array<T>::m_array[low++];
 			}
 			else
 			{
-				tempArray[index++] = m_array[mid++];
+				tempArray[index++] = Array<T>::m_array[mid++];
 			}
 		}
 
 		while (low <= tempMid)
 		{
-			tempArray[index++] = m_array[low++];
+			tempArray[index++] = Array<T>::m_array[low++];
 		}
 		while (mid <= upper)
 		{
-			tempArray[index++] = m_array[mid++];
+			tempArray[index++] = Array<T>::m_array[mid++];
 		}
 
 		// Place the stored tempArray into the main array in the correct locations
 		for (int i = 0; i < upper - tempLow + 1; i++)
 		{
-			m_array[tempLow + i] = tempArray[i];
+			Array<T>::m_array[tempLow + i] = tempArray[i];
 		}
-	}
-	// Expansion
-	bool Expand()
-	{
-		if (m_growSize <= 0)
-		{
-			return false;
-		}
-
-		// Create the new array
-		T* temp = new T[m_maxSize + m_growSize];
-		assert(temp != NULL);
-
-		// Copy the contents of the original array to the new array
-		memcpy(temp, m_array, sizeof(T) * m_maxSize);
-
-		// Delete the old array
-		delete[] m_array;
-
-		// Clean up variable assignments
-		m_array = temp;
-		temp = NULL;
-
-		m_maxSize += m_growSize;
-
-		return true;
 	}
 private:
-	// Variables
-	T* m_array;			// Pointer to the beginning of the array
-
-	int m_maxSize;		// Maximum size of my array
-	int m_growSize;		// Amount the array can grow through expansion
-	int m_numElements;	// Number of items currently in my array
 };
