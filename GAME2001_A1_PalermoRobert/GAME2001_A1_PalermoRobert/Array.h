@@ -68,6 +68,7 @@ public:
 	}
 	// Virtual Functions
 	virtual int push(T val) = 0;
+	virtual int search(T val) = 0;
 	// Gets and Sets
 	int GetSize()
 	{
@@ -112,7 +113,7 @@ protected:
 		m_maxSize += m_growSize;
 
 		// Increasing grow size
-		SetGrowSize(GetGrowSize() << 1);
+		SetGrowSize(m_growSize << 1);
 
 		return true;
 	}

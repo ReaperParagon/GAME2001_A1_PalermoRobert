@@ -7,7 +7,8 @@ class OrderedArray : public Array<T>
 {
 public:
 	// Constructor
-	OrderedArray(int size, int growBy = 2) : Array<T>(size, growBy)
+	OrderedArray(int size, int growBy = 2, bool allowDuplicates = false) 
+		: Array<T>(size, growBy), m_allowDuplicates(allowDuplicates)
 	{}
 	// Insertion - Big-O = O(N)
 	virtual int push(T val)
@@ -28,8 +29,8 @@ public:
 				break;
 			}
 
-			// Checking for Duplicate Data
-			if (this->m_array[i] == val)
+			// Checking for Duplicate Data, return if there is
+			if (!m_allowDuplicates && this->m_array[i] == val)
 			{
 				return -1;
 			}
@@ -48,48 +49,53 @@ public:
 
 		return i;
 	}
-	// Searching -- Binary Search -- Big-O = O(log N)
+	// Searching
 	int search(T searchKey)
 	{
+		// Call to binarysearch recursive function
+		return binarySearch(searchKey, 0, this->m_numElements - 1);
+	}
+private:
+	// Recursive Binary Search
+	int binarySearch(T searchKey, int lowerBound, int upperBound)
+	{
 		assert(this->m_array != NULL);
+		assert(lowerBound >= 0);
+		assert(upperBound < this->m_numElements);
 
-		// Helper variables
-		int lowerBound = 0;
-		int upperBound = this->m_numElements - 1;
-		int current = 0;
+		// Bitwise divide by 2
+		int current = (lowerBound + upperBound) >> 1;		// 2^1 == >> 1
 
-		while (1)	// <-- Replaced with recursion
+		// Did we find the searchKey at current
+		if (this->m_array[current] == searchKey)
 		{
-			current = (lowerBound + upperBound) >> 1;		// Preview of Bitwise operations. DIvides by 2
-
-			// Binary search steps:
-			// Step 1: Check if the middle is the value we are looking for
-			if (this->m_array[current] == searchKey)
+			// We have found the searchKey in the array. Return the index
+			return current;
+		}
+		// Are we done searching?
+		else if (lowerBound > upperBound)
+		{
+			// Did not find searchKey within m_array
+			return -1;
+		}
+		// Which half is searchKey in?
+		else
+		{
+			if (this->m_array[current] < searchKey)
 			{
-				// Found the item in the middle of the array. Return the index
-				return current;
-			}
-			// Step 2: Check that we've exhausted all options already. Can't find the item
-			else if (lowerBound > upperBound)
-			{
-				return -1;
+				// Search the upper half of the array
+				return binarySearch(searchKey, current + 1, upperBound);
 			}
 			else
 			{
-				// Step 3: Check which half of the array the value is in
-				if (this->m_array[current] < searchKey)
-				{
-					lowerBound = current + 1;
-				}
-				else
-				{
-					upperBound = current - 1;
-				}
+				// Search the lower half of the array
+				return binarySearch(searchKey, lowerBound, current - 1);
 			}
 		}
 
 		return -1;
 	}
 private:
-private:
+	// Variables
+	bool m_allowDuplicates;
 };

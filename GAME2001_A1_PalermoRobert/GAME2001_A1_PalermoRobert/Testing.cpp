@@ -6,42 +6,92 @@ using namespace std;
 
 int main()
 {
-	cout << "Merge Sort Algorithm" << endl;
+	// Creation of both Ordered and Unordered arrays
+	UnorderedArray<int> arrayUnOrd(1);
+	OrderedArray<int> arrayOrd(1);
 
-	UnorderedArray<int> array(1);
-	OrderedArray<int> array2(1);
+	// 1) Shared Array Functionality
+	cout << "Shared Array functionality" << endl;
+	cout << "--------------------" << endl;
 
-	cout << "Grow Size is: " << array.GetGrowSize() << endl;
+	// Growing by increasing value (2,4,8,16...)
+	cout << "Expanding by an increasing value:" << endl;
+	cout << "Array Max Size: " << arrayUnOrd.GetMaxSize() << endl;
 
-	array.push(80);
-	array.push(64);
+	cout << "First we Push 2 items into the array..." << endl;
+	arrayUnOrd.push(80);
+	arrayUnOrd.push(94);	// Grows by 2	
 
-	cout << "Grow Size is: " << array.GetGrowSize() << endl;
+	cout << "Array Max Size: " << arrayUnOrd.GetMaxSize() << endl;
 
-	array.push(99);
-	array.push(76);
+	cout << "Array grew by 2, and now we push 2 more items into the array..." << endl;
+	arrayUnOrd.push(99);
+	arrayUnOrd.push(76);	// Grows by 4
 
-	cout << "Grow Size is: " << array.GetGrowSize() << endl;
+	cout << "Array Max Size: " << arrayUnOrd.GetMaxSize() << endl;
 
-	array.push(5);
+	cout << "Array grew by 4..." << endl;
+	cout << endl;
 
-	cout << "Grow Size is: " << array.GetGrowSize() << endl;
-
+	// 2) Demonstrating Unoredered Array Functionality
+	cout << "Unordered Array Sorting Functionality:" << endl;
+	cout << "--------------------" << endl;
 	cout << "Before sort: ";
-	for (int i = 0; i < array.GetSize(); i++)
+	for (int i = 0; i < arrayUnOrd.GetSize(); i++)
 	{
-		cout << " " << array[i];
+		cout << " " << arrayUnOrd[i];
 	}
 
 	cout << endl;
 
-	array.MergeSort();
+	// arrayUnOrd.BubbleSort();
+	// arrayUnOrd.SelectionSort();
+	// arrayUnOrd.InsertionSort();
+	arrayUnOrd.MergeSort();
 
 	cout << "After sort: ";
-	for (int i = 0; i < array.GetSize(); i++)
+	for (int i = 0; i < arrayUnOrd.GetSize(); i++)
 	{
-		cout << " " << array[i];
+		cout << " " << arrayUnOrd[i];
 	}
+	cout << endl << endl;
+
+	// 3) Demonstrating Ordered Array Functionality
+	// I. Preventing Duplicate data
+	cout << "Ordered Array, Preventing duplicate data:" << endl;
+	cout << "--------------------" << endl;
+
+	cout << "First we push 5 numbers into the array..." << endl;
+	arrayOrd.push(32);
+	arrayOrd.push(64);
+	arrayOrd.push(72);
+	arrayOrd.push(94);
+	arrayOrd.push(13);
+
+	cout << "Ordered Array: ";
+	for (int i = 0; i < arrayOrd.GetSize(); i++)
+	{
+		cout << " " << arrayOrd[i];
+	}
+
+	// Trying to add duplicate data
+	cout << endl << "Now we try to push 72 and 13 into the array again..." << endl;
+	arrayOrd.push(72);
+	arrayOrd.push(13);
+
+	cout << "Ordered Array: ";
+	for (int i = 0; i < arrayOrd.GetSize(); i++)
+	{
+		cout << " " << arrayOrd[i];
+	}
+	cout << endl << "There are no duplicate numbers!" << endl;
+
+	// II. Search Functionality
+	cout << endl << "Ordered Array's Binary Search" << endl;
+	cout << "--------------------" << endl;
+	cout << "Searching for index of 72" << endl;
+
+	cout << "Found 72 at index: " << arrayOrd.search(72) << endl;
 
 	cout << endl << endl;
 
