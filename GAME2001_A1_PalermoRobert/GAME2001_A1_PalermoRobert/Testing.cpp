@@ -1,5 +1,6 @@
 #include <iostream>
-#include "UnorderedArray.h"
+#include "OrderedArray.h"
+#include "UnOrderedArray.h"
 
 using namespace std;
 
@@ -8,6 +9,7 @@ int main()
 	cout << "Merge Sort Algorithm" << endl;
 
 	UnorderedArray<int> array(1);
+	OrderedArray<int> array2(1);
 
 	cout << "Grow Size is: " << array.GetGrowSize() << endl;
 

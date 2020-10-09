@@ -7,34 +7,34 @@ class UnorderedArray : public Array<T>
 {
 public:
 	// Constructor
-	UnorderedArray(int size, int growBy = 1) : Array<T>(size, growBy)
+	UnorderedArray(int size, int growBy = 2) : Array<T>(size, growBy)
 	{}
 	// Insertions
 	// Fast insertion for UnorderedArray -- Big-O is O(1)
 	virtual int push(T val)
 	{
-		assert(Array<T>::m_array != NULL);	// Debugging purposes
+		assert(this->m_array != NULL);	// Debugging purposes
 
-		if (Array<T>::m_numElements >= Array<T>::m_maxSize)
+		if (this->m_numElements >= this->m_maxSize)
 		{
-			Array<T>::Expand();
+			this->Expand();
 		}
 
 		// My array has space for the new value
-		Array<T>::m_array[Array<T>::m_numElements] = val;
-		Array<T>::m_numElements++;
+		this->m_array[this->m_numElements] = val;
+		this->m_numElements++;
 
-		return Array<T>::m_numElements - 1;
+		return this->m_numElements - 1;
 	}
 	// Searching (Linear search) -- Big-O = O(N)
 	int search(T val)
 	{
-		assert(Array<T>::m_array != NULL);
+		assert(this->m_array != NULL);
 
 		// Brute-froce search
-		for (int i = 0; i < Array<T>::m_numElements; i++)
+		for (int i = 0; i < this->m_numElements; i++)
 		{
-			if (Array<T>::m_array[i] == val)
+			if (this->m_array[i] == val)
 			{
 				return i;
 			}
@@ -46,21 +46,21 @@ public:
 	// Bubble Sort -- Big O = O(N^2)
 	void BubbleSort()
 	{
-		assert(Array<T>::m_array != NULL);
+		assert(this->m_array != NULL);
 
 		T temp;
 
-		for (int k = Array<T>::m_numElements - 1; k > 0; k--)
+		for (int k = this->m_numElements - 1; k > 0; k--)
 		{
 			// Comparing 2 adjacent elements
 			for (int i = 0; i < k; i++)
 			{
-				if (Array<T>::m_array[i] > Array<T>::m_array[i + 1])
+				if (this->m_array[i] > this->m_array[i + 1])
 				{
 					// Swap the elements
-					temp = Array<T>::m_array[i];
-					Array<T>::m_array[i] = Array<T>::m_array[i + 1];
-					Array<T>::m_array[i + 1] = temp;
+					temp = this->m_array[i];
+					this->m_array[i] = this->m_array[i + 1];
+					this->m_array[i + 1] = temp;
 				}
 			}
 		}
@@ -68,20 +68,20 @@ public:
 	// Selection Sort -- Big O = O(N^2)
 	void SelectionSort()
 	{
-		assert(Array<T>::m_array != NULL);
+		assert(this->m_array != NULL);
 
 		T temp;
 		int min = 0;
 
 		// The lowest position to swap the smallest element to...
-		for (int k = 0; k < Array<T>::m_numElements - 1; k++)
+		for (int k = 0; k < this->m_numElements - 1; k++)
 		{
 			min = k;
 
 			// Iterate through the array to find the smallest value
-			for (int i = k + 1; i < Array<T>::m_numElements; i++)
+			for (int i = k + 1; i < this->m_numElements; i++)
 			{
-				if (Array<T>::m_array[i] < Array<T>::m_array[min])
+				if (this->m_array[i] < this->m_array[min])
 				{
 					// Store the index to the smallest element
 					min = i;
@@ -89,50 +89,50 @@ public:
 			}
 
 			// Swapping of the lowest element with the lowest available index
-			if (Array<T>::m_array[k] > Array<T>::m_array[min])
+			if (this->m_array[k] > this->m_array[min])
 			{
 				// Swap
-				temp = Array<T>::m_array[k];
-				Array<T>::m_array[k] = Array<T>::m_array[min];
-				Array<T>::m_array[min] = temp;
+				temp = this->m_array[k];
+				this->m_array[k] = this->m_array[min];
+				this->m_array[min] = temp;
 			}
 		}
 	}
 	// Insertion Sort -- Big O = O(N^2)
 	void InsertionSort()
 	{
-		assert(Array<T>::m_array != NULL);
+		assert(this->m_array != NULL);
 
 		T temp;
 		int i = 0;
 
-		for (int k = 1; k < Array<T>::m_numElements; k++)
+		for (int k = 1; k < this->m_numElements; k++)
 		{
-			temp = Array<T>::m_array[k];
+			temp = this->m_array[k];
 			i = k;
 
 			// Shifting of elements if necessary. Create a space for an element
 			// to be inserted in the correct location
-			while (i > 0 && Array<T>::m_array[i - 1] >= temp)
+			while (i > 0 && this->m_array[i - 1] >= temp)
 			{
 				// Push elements to the right
-				Array<T>::m_array[i] = Array<T>::m_array[i - 1];
+				this->m_array[i] = this->m_array[i - 1];
 				i--;
 			}
 
 			// Place the item in the correct location
-			Array<T>::m_array[i] = temp;
+			this->m_array[i] = temp;
 		}
 	}
 	// Merge Sort -- Big O = O(N logN)
 	void MergeSort()
 	{
-		assert(Array<T>::m_array != NULL);
+		assert(this->m_array != NULL);
 
-		T* tempArray = new T[Array<T>::m_numElements];
+		T* tempArray = new T[this->m_numElements];
 		assert(tempArray != NULL);
 
-		MergeSort(tempArray, 0, Array<T>::m_numElements - 1);
+		MergeSort(tempArray, 0, this->m_numElements - 1);
 		delete[] tempArray;
 	}
 private:
@@ -163,29 +163,29 @@ private:
 		while (low <= tempMid && mid <= upper)
 		{
 			// Lower of the 2 values is smaller, move it to the tempArray
-			if (Array<T>::m_array[low] < Array<T>::m_array[mid])
+			if (this->m_array[low] < this->m_array[mid])
 			{
-				tempArray[index++] = Array<T>::m_array[low++];
+				tempArray[index++] = this->m_array[low++];
 			}
 			else
 			{
-				tempArray[index++] = Array<T>::m_array[mid++];
+				tempArray[index++] = this->m_array[mid++];
 			}
 		}
 
 		while (low <= tempMid)
 		{
-			tempArray[index++] = Array<T>::m_array[low++];
+			tempArray[index++] = this->m_array[low++];
 		}
 		while (mid <= upper)
 		{
-			tempArray[index++] = Array<T>::m_array[mid++];
+			tempArray[index++] = this->m_array[mid++];
 		}
 
 		// Place the stored tempArray into the main array in the correct locations
 		for (int i = 0; i < upper - tempLow + 1; i++)
 		{
-			Array<T>::m_array[tempLow + i] = tempArray[i];
+			this->m_array[tempLow + i] = tempArray[i];
 		}
 	}
 private:

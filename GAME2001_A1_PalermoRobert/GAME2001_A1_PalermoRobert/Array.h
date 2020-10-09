@@ -5,7 +5,7 @@ template<class T>
 class Array
 {
 public:
-	Array(int size, int growBy = 1) :
+	Array(int size, int growBy = 2) :
 		m_array(NULL), m_maxSize(0), m_growSize(0), m_numElements(0)
 	{
 		if (size)
